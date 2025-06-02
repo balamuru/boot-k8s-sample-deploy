@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: boot-k8s-sample-deploy-config
-  namespace: default
-  labels:
-    app.kubernetes.io/name: boot-k8s-sample-deploy
-    kubernetes.azure.com/generator: devhub
-data:
