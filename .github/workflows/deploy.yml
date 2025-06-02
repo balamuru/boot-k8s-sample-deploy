@@ -54,7 +54,7 @@ jobs:
           cluster_name: '${{ vars.GKE_CLUSTER }}'
           location: 'us-central1'
 
-      # Build the Docker image
+      # Build the Docker image and push to DockerHub
       - name: 'Build and push Docker container'
         run: |-
           docker build \
