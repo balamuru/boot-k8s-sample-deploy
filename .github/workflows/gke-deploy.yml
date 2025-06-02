@@ -77,7 +77,8 @@ jobs:
       - name: 'Deploy to GKE'
         run: |-
           # Update the image in kustomization
-          ./kustomize edit set image vinaybalamuru/boot-k8s-sample-deploy:${GITHUB_SHA}
-          ./kustomize build . | kubectl apply -f -
-          kubectl rollout status deployment/${{ vars.DEPLOYMENT_NAME }}
+          cd k8s/overlays/non-prod
+          ../../kustomize edit set image vinaybalamuru/boot-k8s-sample-deploy:${GITHUB_SHA}
+          ../../kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment/non-prod-boot-k8s-sample-deploy
           kubectl get services -o wide 
