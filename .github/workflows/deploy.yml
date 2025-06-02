@@ -71,8 +71,9 @@ jobs:
       - name: 'Set up GKE credentials'
         uses: 'google-github-actions/get-gke-credentials@v2'
         with:
-          cluster_name: '${{ vars.GKE_CLUSTER }}'
-          location: '${{ vars.GKE_ZONE }}'
+          project_id: 'jobbeacon-418418'
+          cluster_name: 'k8s-cluster-non-prod'
+          location: 'us-central1-c'
 
       # Build the Docker image
       - name: 'Build and push Docker container'
