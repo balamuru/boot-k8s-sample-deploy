@@ -52,7 +52,7 @@ jobs:
         with:
           project_id: '${{ vars.PROJECT_ID }}'
           cluster_name: '${{ vars.GKE_CLUSTER }}'
-          location: '${{ vars.GKE_ZONE }}'
+          location: 'us-central1'
 
       # Build the Docker image
       - name: 'Build and push Docker container'
