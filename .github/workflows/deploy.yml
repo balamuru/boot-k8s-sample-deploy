@@ -59,13 +59,16 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           workload_identity_provider: '${{ vars.WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account: 'github-actions-sa@jobbeacon-ai-non-prod.iam.gserviceaccount.com'
           token_format: 'access_token'
+          create_credentials_file: true
 
       # Debug step to print service account info
       - name: 'Debug Service Account'
         run: |
+          echo "Current project: $(gcloud config get-value project)"
+          echo "Current account: $(gcloud config get-value account)"
           gcloud auth list
-          gcloud config get-value account
           gcloud projects get-iam-policy ${{ vars.PROJECT_ID }} --format=json
 
       # Authenticate to DockerHub
