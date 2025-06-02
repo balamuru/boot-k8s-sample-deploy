@@ -78,7 +78,7 @@ jobs:
         run: |-
           # Update the image in kustomization
           cd k8s/overlays/non-prod
-          ../../kustomize edit set image vinaybalamuru/boot-k8s-sample-deploy:${GITHUB_SHA}
-          ../../kustomize build . | kubectl apply -f -
+          /home/runner/work/boot-k8s-sample-deploy/boot-k8s-sample-deploy/kustomize edit set image vinaybalamuru/boot-k8s-sample-deploy:${GITHUB_SHA}
+          /home/runner/work/boot-k8s-sample-deploy/boot-k8s-sample-deploy/kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/non-prod-boot-k8s-sample-deploy
           kubectl get services -o wide 
