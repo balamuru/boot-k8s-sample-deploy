@@ -1,1 +1,1 @@
-# k8s deployment files
+# k8s artifacts
