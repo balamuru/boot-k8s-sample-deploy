@@ -33,6 +33,7 @@ jobs:
       # Debug step to print service account info
       - name: 'Debug Service Account'
         run: |
+          gcloud config set project ${{ vars.PROJECT_ID }}
           echo "Current project: $(gcloud config get-value project)"
           echo "Current account: $(gcloud config get-value account)"
           gcloud auth list
