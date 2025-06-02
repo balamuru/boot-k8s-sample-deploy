@@ -58,7 +58,15 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
+          workload_identity_provider: 'projects/268383449859/locations/global/workloadIdentityPools/jobbeacon-workload-id-pool/providers/github-actions-provider'
+          service_account: '${{ vars.GCP_SERVICE_ACCOUNT }}'
+
+      # Debug step to print service account info
+      - name: 'Debug Service Account'
+        run: |
+          gcloud auth list
+          gcloud config get-value account
+          gcloud projects get-iam-policy jobbeacon-418418 --format=json
 
       # Authenticate to DockerHub
       - name: 'Login to DockerHub'
