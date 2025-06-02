@@ -6,7 +6,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Run stage
-FROM eclipse-temurin:21-jre-slim
+FROM eclipse-temurin:21.0.2_13-jre-jammy
 WORKDIR /app
 
 # Create a non-root user
