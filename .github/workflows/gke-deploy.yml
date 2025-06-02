@@ -1,0 +1,83 @@
+name: 'Build and Deploy to GKE'
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  setup-build-publish-deploy:
+    name: 'Setup, Build, Publish, and Deploy'
+    runs-on: 'ubuntu-latest'
+    environment: 'non-prod'
+
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v4'
+
+      # Authenticate to Google Cloud for GKE access
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          workload_identity_provider: '${{ vars.WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account: 'github-actions-sa@jobbeacon-ai-non-prod.iam.gserviceaccount.com'
+          token_format: 'access_token'
+          create_credentials_file: true
+
+      # Debug step to print service account info
+      - name: 'Debug Service Account'
+        run: |
+          gcloud config set project ${{ vars.PROJECT_ID }}
+          echo "Current project: $(gcloud config get-value project)"
+          echo "Current account: $(gcloud config get-value account)"
+          gcloud auth list
+          gcloud projects get-iam-policy ${{ vars.PROJECT_ID }} --format=json
+
+      # Authenticate to DockerHub
+      - name: 'Login to DockerHub'
+        uses: 'docker/login-action@v3'
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Get the GKE credentials
+      - name: 'Set up GKE credentials'
+        uses: 'google-github-actions/get-gke-credentials@v2'
+        with:
+          project_id: '${{ vars.PROJECT_ID }}'
+          cluster_name: '${{ vars.GKE_CLUSTER }}'
+          location: 'us-central1'
+
+      # Build the Docker image and push to DockerHub
+      - name: 'Build and push Docker container'
+        run: |-
+          docker build \
+            --tag "vinaybalamuru/boot-k8s-sample-deploy:${GITHUB_SHA}" \
+            --tag "vinaybalamuru/boot-k8s-sample-deploy:latest" \
+            --build-arg GITHUB_SHA="${GITHUB_SHA}" \
+            --build-arg GITHUB_REF="${GITHUB_REF}" \
+            .
+
+          docker push "vinaybalamuru/boot-k8s-sample-deploy:${GITHUB_SHA}"
+          docker push "vinaybalamuru/boot-k8s-sample-deploy:latest"
+
+      # Set up kustomize
+      - name: 'Set up Kustomize'
+        run: |-
+          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz
+          chmod u+x ./kustomize
+
+      # Deploy the Docker image to the GKE cluster
+      - name: 'Deploy to GKE'
+        run: |-
+          # Update the image in kustomization
+          ./kustomize edit set image ${{ vars.DOCKER_IMAGE }}:${GITHUB_SHA}
+          ./kustomize build . | kubectl apply -f -
+          kubectl rollout status deployment/${{ vars.DEPLOYMENT_NAME }}
+          kubectl get services -o wide 
