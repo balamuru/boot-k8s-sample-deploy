@@ -58,14 +58,14 @@ jobs:
       - name: 'Build and push Docker container'
         run: |-
           docker build \
-            --tag "${{ vars.DOCKER_IMAGE }}:${GITHUB_SHA}" \
-            --tag "${{ vars.DOCKER_IMAGE }}:latest" \
+            --tag "vinaybalamuru/boot-k8s-sample-deploy:${GITHUB_SHA}" \
+            --tag "vinaybalamuru/boot-k8s-sample-deploy:latest" \
             --build-arg GITHUB_SHA="${GITHUB_SHA}" \
             --build-arg GITHUB_REF="${GITHUB_REF}" \
             .
 
-          docker push "${{ vars.DOCKER_IMAGE }}:${GITHUB_SHA}"
-          docker push "${{ vars.DOCKER_IMAGE }}:latest"
+          docker push "vinaybalamuru/boot-k8s-sample-deploy:${GITHUB_SHA}"
+          docker push "vinaybalamuru/boot-k8s-sample-deploy:latest"
 
       # Set up kustomize
       - name: 'Set up Kustomize'
