@@ -58,15 +58,15 @@ jobs:
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2'
         with:
-          workload_identity_provider: 'projects/268383449859/locations/global/workloadIdentityPools/jobbeacon-workload-id-pool/providers/github-actions-provider'
-          service_account: '${{ vars.GCP_SERVICE_ACCOUNT }}'
+          workload_identity_provider: '${{ vars.WORKLOAD_IDENTITY_PROVIDER }}'
+          service_account: 'vinay.balamuru@jobbeacon.ai'
 
       # Debug step to print service account info
       - name: 'Debug Service Account'
         run: |
           gcloud auth list
           gcloud config get-value account
-          gcloud projects get-iam-policy jobbeacon-418418 --format=json
+          gcloud projects get-iam-policy ${{ vars.PROJECT_ID }} --format=json
 
       # Authenticate to DockerHub
       - name: 'Login to DockerHub'
@@ -79,9 +79,9 @@ jobs:
       - name: 'Set up GKE credentials'
         uses: 'google-github-actions/get-gke-credentials@v2'
         with:
-          project_id: 'jobbeacon-418418'
-          cluster_name: 'k8s-cluster-non-prod'
-          location: 'us-central1-c'
+          project_id: '${{ vars.PROJECT_ID }}'
+          cluster_name: '${{ vars.GKE_CLUSTER }}'
+          location: '${{ vars.GKE_ZONE }}'
 
       # Build the Docker image
       - name: 'Build and push Docker container'
