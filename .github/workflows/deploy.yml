@@ -59,7 +59,7 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           workload_identity_provider: '${{ vars.WORKLOAD_IDENTITY_PROVIDER }}'
-          service_account: 'vinay.balamuru@jobbeacon.ai'
+          token_format: 'access_token'
 
       # Debug step to print service account info
       - name: 'Debug Service Account'
