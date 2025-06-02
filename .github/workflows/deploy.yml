@@ -53,7 +53,7 @@ jobs:
       - name: 'Checkout'
         uses: 'actions/checkout@v4'
 
-      # Authenticate to Google Cloud for GKE access.
+      # Authenticate to Google Cloud for GKE access
       - id: 'auth'
         name: 'Authenticate to Google Cloud'
         uses: 'google-github-actions/auth@v2'
