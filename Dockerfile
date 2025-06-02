@@ -1,8 +1,9 @@
 # Build stage
-FROM maven:3.9.6-eclipse-temurin-21-slim AS build
+FROM eclipse-temurin:21.0.2_13-jdk-jammy AS build
 WORKDIR /app
 COPY pom.xml .
 COPY src ./src
+RUN apt-get update && apt-get install -y maven
 RUN mvn clean package -DskipTests
 
 # Run stage
