@@ -69,16 +69,16 @@ jobs:
 
       # Set up kustomize
       - name: 'Set up Kustomize'
-        run: |-
-          curl -sfLo kustomize https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz
-          chmod u+x ./kustomize
+        uses: imranismail/setup-kustomize@v2
+        with:
+          kustomize-version: 'v5.4.3'
 
       # Deploy the Docker image to the GKE cluster
       - name: 'Deploy to GKE'
         run: |-
           # Update the image in kustomization
           cd k8s/overlays/non-prod
-          /home/runner/work/boot-k8s-sample-deploy/boot-k8s-sample-deploy/kustomize edit set image vinaybalamuru/boot-k8s-sample-deploy:${GITHUB_SHA}
-          /home/runner/work/boot-k8s-sample-deploy/boot-k8s-sample-deploy/kustomize build . | kubectl apply -f -
+          kustomize edit set image vinaybalamuru/boot-k8s-sample-deploy:${GITHUB_SHA}
+          kustomize build . | kubectl apply -f -
           kubectl rollout status deployment/non-prod-boot-k8s-sample-deploy
           kubectl get services -o wide 
