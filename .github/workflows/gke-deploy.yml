@@ -69,7 +69,7 @@ jobs:
 
       # Set up kustomize
       - name: 'Set up Kustomize'
-        uses: imranismail/setup-kustomize@v2
+        uses: kubernetes-sigs/kustomize-action@v1
         with:
           kustomize-version: 'v5.4.3'
 
