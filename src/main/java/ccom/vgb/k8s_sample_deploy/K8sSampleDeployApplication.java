@@ -16,6 +16,6 @@ public class K8sSampleDeployApplication {
 
 	@GetMapping("/hello")
 	public String hello() {
-		return "Hello, Kubernetes!!!!!";
+		return "Hello, Kubernetes!!!!!##";
 	}
 }
